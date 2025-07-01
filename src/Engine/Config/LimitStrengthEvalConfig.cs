@@ -34,5 +34,6 @@ public sealed class LimitStrengthEvalConfig
     public int NumberOfPieceSquareTable { get; set; }
     public int MgQueenMobilityPer128 { get; set; } = 128;
     public int MgRookMobilityPer128 { get; set; } = 128;
+    public int OgHeavyPieceMobilityAtMoveZeroPer128 { get; set; } = -111; 
     // ReSharper restore UnusedAutoPropertyAccessor.Global
 }

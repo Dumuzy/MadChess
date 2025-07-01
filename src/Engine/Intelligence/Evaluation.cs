@@ -41,15 +41,15 @@ public sealed class Evaluation
     // Game Phase (constants selected such that starting material = 128)
     public const int MiddlegamePhase = 4 * (_knightPhaseWeight + _bishopPhaseWeight + _rookPhaseWeight) + (2 * _queenPhaseWeight);
     private const int _awiEndgamePhase = (2 * _queenPhaseWeight - _knightPhaseWeight); // by AW. Endgame fully reached when phase < AwiEndgamePhase ;
-    private const int _awiEndgamePhaseConst = (MiddlegamePhase + _awiEndgamePhase) / 2; 
+    private const int _awiEndgamePhaseConst = (MiddlegamePhase + _awiEndgamePhase) / 2;
     private const int _knightPhaseWeight = 5; //   4 *  5 =  20
     private const int _bishopPhaseWeight = 5; // + 4 *  5 =  40
-    private const int _rookPhaseWeight =  11; // + 4 * 11 =  84
+    private const int _rookPhaseWeight = 11; // + 4 * 11 =  84
     private const int _queenPhaseWeight = 22; // + 2 * 22 = 128
 
     // Draw by Repetition
     public int DrawMoves;
-    
+
     // Material
     private readonly int[] _mgMaterialScores; // [colorlessPiece]
     private readonly int[] _egMaterialScores; // [colorlessPiece]
@@ -285,8 +285,8 @@ public sealed class Evaluation
                         throw new Exception($"{colorlessPiece} colorless piece not supported.");
                 }
 
-                if ((colorlessPiece == ColorlessPiece.Pawn || colorlessPiece == ColorlessPiece.Rook 
-                    || colorlessPiece == ColorlessPiece.King) 
+                if ((colorlessPiece == ColorlessPiece.Pawn || colorlessPiece == ColorlessPiece.Rook
+                    || colorlessPiece == ColorlessPiece.King)
                         && Config.NumberOfPieceSquareTable != 0)
                     SetMgPieceSquareTableValue(Config.NumberOfPieceSquareTable, colorlessPiece, square);
                 else
@@ -318,11 +318,11 @@ public sealed class Evaluation
     // look more human-like. 
 
 
-    static readonly System.Collections.Generic.List<int[]> pstPawnMg = 
+    static readonly System.Collections.Generic.List<int[]> pstPawnMg =
         new System.Collections.Generic.List<int[]> {
         new int[] { }, 
     //A1            Pawn 1              H1
-    new int[64] 
+    new int[64]
     { 0,   0,   0,   0,   0,   0,   0,   0,
     -32, -16, -17, -27, -27, -17, -16, -32,
     -25, -16, -16, -18, -18, -16, -16, -25,
@@ -334,7 +334,7 @@ public sealed class Evaluation
     //A8                                H8
 
     //A1            Pawn 2              H1
-    new int[64] 
+    new int[64]
     { 0,   0,   0,   0,   0,   0,   0,   0,
     -15,  -5,   5,   5,   5,   5,  -5, -15,
     -20, -15,   5,  15,  15,   5, -15, -20,
@@ -347,7 +347,7 @@ public sealed class Evaluation
 
     
     //A1         Pawn 3                 H1
-    new int[64] 
+    new int[64]
     { 0,   0,   0,   0,   0,   0,   0,   0,
     -23, -11,  -5,   2,   2,  -5, -11, -23,
     -22, -10,  -4,   8,   8,  -4, -10, -22,
@@ -409,7 +409,7 @@ public sealed class Evaluation
         -31, -19, -21, -30, -30, -21, -19, -31,
         -56, -19, -21, -30, -30, -21, -19, -56,
         -36, -19, -23, -32, -32, -23, -19, -36,
-        -32, -28, -13, -39, -39, -13, -28, -32, 
+        -32, -28, -13, -39, -39, -13, -28, -32,
         -11, -17,  -4, -18, -18,  -4, -17, -11,
         -29,  -1,  -5, -22, -22,  -5,  -1, -29},
     //A8                                H8
@@ -448,7 +448,7 @@ public sealed class Evaluation
 
         for (var moves = 0; moves <= maxMoves; moves++)
         {
-            var fractionOfMaxMoves = (double) moves / maxMoves;
+            var fractionOfMaxMoves = (double)moves / maxMoves;
             mgPieceMobility[moves] = Formula.GetNonLinearBonus(fractionOfMaxMoves, mgMobilityScale, pieceMobilityPower, -mgMobilityScale / 2);
             egPieceMobility[moves] = Formula.GetNonLinearBonus(fractionOfMaxMoves, egMobilityScale, pieceMobilityPower, -egMobilityScale / 2);
         }
@@ -539,6 +539,7 @@ public sealed class Evaluation
         // Mobilities
         Config.MgQueenMobilityPer128 = _limitStrengthConfig.MgQueenMobilityPer128;
         Config.MgRookMobilityPer128 = _limitStrengthConfig.MgRookMobilityPer128;
+        Config.OgHeavyPieceMobilityAtMoveZeroPer128 = _limitStrengthConfig.OgHeavyPieceMobilityAtMoveZeroPer128;
         Config.MgQueenMobilityScale = Config.MgQueenMobilityScale * Config.MgQueenMobilityPer128 / 128;
         Config.MgRookMobilityScale = Config.MgRookMobilityScale * Config.MgRookMobilityPer128 / 128;
 
@@ -579,6 +580,7 @@ public sealed class Evaluation
             _messenger.WriteLine($"info string {nameof(Config.NumberOfPieceSquareTable)} = {Config.NumberOfPieceSquareTable}");
             _messenger.WriteLine($"info string {nameof(Config.MgQueenMobilityPer128)} = {Config.MgQueenMobilityPer128}");
             _messenger.WriteLine($"info string {nameof(Config.MgRookMobilityPer128)} = {Config.MgRookMobilityPer128}");
+            _messenger.WriteLine($"info string {nameof(Config.OgHeavyPieceMobilityAtMoveZeroPer128)} = {Config.OgHeavyPieceMobilityAtMoveZeroPer128}");
         }
     }
 
@@ -624,7 +626,7 @@ public sealed class Evaluation
         var fromSquareWhitePerspective = Board.GetSquareFromWhitePerspective(fromSquare, color);
         var toSquare = Move.To(move);
         var toSquareWhitePerspective = Board.GetSquareFromWhitePerspective(toSquare, color);
-        
+
         var mgImprovement = _mgPieceLocations[(int)colorlessPiece][(int)toSquareWhitePerspective] - _mgPieceLocations[(int)colorlessPiece][(int)fromSquareWhitePerspective];
         var egImprovement = _egPieceLocations[(int)colorlessPiece][(int)toSquareWhitePerspective] - _egPieceLocations[(int)colorlessPiece][(int)fromSquareWhitePerspective];
 
@@ -887,7 +889,7 @@ public sealed class Evaluation
         _staticScore.EgPawnMaterial[(int)color] = pawnCount * _egMaterialScores[(int)ColorlessPiece.Pawn];
 
         var pawnsMinus3 = pawnCount - 3;
-        _staticScore.Closedness[(int)color] = pawnsMinus3 > 0 ? 
+        _staticScore.Closedness[(int)color] = pawnsMinus3 > 0 ?
                 (pawnsMinus3 * _limitStrengthConfig.LikesClosedPositionsPer128) : 0;
 
         if (_limitStrengthConfig.LikesEndgamesPer128 != 0 && color == Color.Black)
@@ -1103,7 +1105,7 @@ public sealed class Evaluation
         while ((square = Bitwise.PopFirstSetSquare(ref enemyPawns)) != Square.Illegal)
             squaresAttackedByEnemyPawns |= Board.PawnAttackMasks[(int)enemyColor][(int)square];
         var safeSquares = ~squaresAttackedByEnemyPawns;
-        
+
         enemyPawns = position.GetPawns(enemyColor); // Repopulate after above while loop popped all enemy pawn squares.
 
         // Evaluate mobility of individual pieces.
@@ -1127,6 +1129,15 @@ public sealed class Evaluation
                 var (mgPieceMobilityScore, egPieceMobilityScore) = GetPieceMobilityScore(moves, _mgPieceMobility[(int)colorlessPiece], _egPieceMobility[(int)colorlessPiece]);
                 _staticScore.MgPieceMobility[(int)color] += mgPieceMobilityScore;
                 _staticScore.EgPieceMobility[(int)color] += egPieceMobilityScore;
+                var x = position.FullMoveNumber;
+                if (x < 10 && colorlessPiece >= ColorlessPiece.Rook && _limitStrengthConfig.OgHeavyPieceMobilityAtMoveZeroPer128 != -111)
+                {
+                    // Quadratic function to reduce impact of Rook and Queen mobility in the opening, until FullMoveNumber 9. By AWi.
+                    var k = _limitStrengthConfig.OgHeavyPieceMobilityAtMoveZeroPer128;
+                    var fak = ((128 - k) * x * x / (10 * 10) + k);
+                    _staticScore.MgPieceMobility[(int)color] = _staticScore.MgPieceMobility[(int)color] * fak / 128;
+                    _staticScore.EgPieceMobility[(int)color] = _staticScore.EgPieceMobility[(int)color] * fak / 128;
+                }
 
                 // Evaluate king safety using safe xray moves.
                 var pieceXrayMovesMask = getPieceXrayMovesMask(square, color, position);
@@ -1203,7 +1214,7 @@ public sealed class Evaluation
         var knights = position.GetKnights(color);
         var bishops = position.GetBishops(color);
         var pawns = position.GetPawns(color);
-        
+
         // Bishop Pair
         var bishopOnWhiteSquare = (bishops & Board.SquareColors[(int)Color.White]) > 0;
         var bishopOnBlackSquare = (bishops & Board.SquareColors[(int)Color.Black]) > 0;
@@ -1227,7 +1238,7 @@ public sealed class Evaluation
             if ((pawns & supportingPawnsMask) == 0) continue; // Knight is unsupported by own pawns.
             potentialAttackMask = Board.PassedPawnMasks[(int)color][(int)square] & ~Board.FreePawnMasks[(int)color][(int)square];
             if ((enemyPawns & potentialAttackMask) > 0) continue; // Knight can be attacked by enemy pawns.
-            
+
             // Knight is positioned safely in enemy territory on an outpost square.
             _staticScore.MgOutposts[(int)color] += Config.MgKnightOutpost;
             _staticScore.EgOutposts[(int)color] += Config.EgKnightOutpost;
@@ -1241,7 +1252,7 @@ public sealed class Evaluation
             if ((pawns & supportingPawnsMask) == 0) continue; // Bishop is unsupported by own pawns.
             potentialAttackMask = Board.PassedPawnMasks[(int)color][(int)square] & ~Board.FreePawnMasks[(int)color][(int)square];
             if ((enemyPawns & potentialAttackMask) > 0) continue; // Bishop can be attacked by enemy pawns.
-            
+
             // Bishop is positioned safely in enemy territory on an outpost square.
             _staticScore.MgOutposts[(int)color] += Config.MgBishopOutpost;
             _staticScore.EgOutposts[(int)color] += Config.EgBishopOutpost;
@@ -1449,7 +1460,7 @@ public sealed class Evaluation
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine("Evaluation Term                    Knowledge Percent");
         stringBuilder.AppendLine();
-        
+
         stringBuilder.Append("Rating (Elo)                    ");
         for (var index = 0; index < _limitStrengthElos.Length; index++)
         {
@@ -1511,6 +1522,7 @@ public sealed class Evaluation
 
         // Mobilities
         stringBuilder.AppendLine($"Mg*Mobility Queen={_limitStrengthConfig.MgQueenMobilityPer128}  Rook={_limitStrengthConfig.MgRookMobilityPer128}");
+        stringBuilder.AppendLine($"Og*Mobility ={_limitStrengthConfig.OgHeavyPieceMobilityAtMoveZeroPer128} ");
         return stringBuilder.ToString();
     }
 

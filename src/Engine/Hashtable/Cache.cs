@@ -110,6 +110,7 @@ public sealed class Cache
 
         for (var bucketIndex = index; bucketIndex <= maxBucketIndex; bucketIndex++)
         {
+            // TODO T431. System.NullReferenceException???
             var position = _positions[bucketIndex];
             if (position.Key == cachedPosition.Key)
             {

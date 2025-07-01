@@ -157,6 +157,7 @@ public sealed class EvaluationConfig
     public int NumberOfPieceSquareTable = 0; // AW, 08.3.24   
     public int MgQueenMobilityPer128 = 128; // AW, 12.3.24
     public int MgRookMobilityPer128 = 128;  // AW, 12.3.24
+    public int OgHeavyPieceMobilityAtMoveZeroPer128 = -111;  // AW, 14.1.25
 
 
     // ReSharper restore FieldCanBeMadeReadOnly.Global
@@ -297,5 +298,6 @@ public sealed class EvaluationConfig
         NumberOfPieceSquareTable = copyFromConfig.NumberOfPieceSquareTable;
         MgQueenMobilityPer128 = copyFromConfig.MgQueenMobilityPer128;
         MgRookMobilityPer128 = copyFromConfig.MgRookMobilityPer128;
+        OgHeavyPieceMobilityAtMoveZeroPer128 = copyFromConfig.OgHeavyPieceMobilityAtMoveZeroPer128;
     }
 }
